@@ -17,11 +17,16 @@ asmlinkage int sys_my_xtime(struct timespec __user *current_time){
 	
 	//printk(KERN_ALERT "Xtime in nanoseconds: %lu\n", xtime.tv_nsec);
 	//printk(KERN_ALERT "current time address, %p", current_time);
+	if (copy_to_user(current_time, &xtime, sizeof(struct timespec))){
+		return -EFAULT;
+	}
+	/*
 	int copyErrNum = 0;
 	copyErrNum = copy_to_user(current_time, &xtime, sizeof(struct timespec));
+	*/
 	printk(KERN_ALERT "Current time in nanoseconds: %lu\n", xtime.tv_nsec);
         // return 0 ok?
 	
-	return copyErrNum;
+	return 0;
 }
 EXPORT_SYMBOL(sys_my_xtime);
